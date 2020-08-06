@@ -1,0 +1,40 @@
+{
+	"name": "Trsak/9problem",
+	"description": "9problem implemented using PHP in Nette framework.",
+	"homepage": "https://9problem.psopf.cz",
+	"type": "project",
+	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+	"authors": [
+		{
+			"name": "Petr Šopf",
+			"homepage": "https://psopf.cz"
+		}
+	],
+	"require": {
+		"php": ">=7.1",
+		"nette/application": "^3.0",
+		"nette/bootstrap": "^3.0",
+		"nette/caching": "^3.0",
+		"nette/database": "^3.0",
+		"nette/di": "^3.0",
+		"nette/finder": "^3.0",
+		"nette/forms": "^3.0",
+		"nette/http": "^3.0",
+		"nette/mail": "^3.0",
+		"nette/robot-loader": "^3.0",
+		"nette/safe-stream": "^2.3",
+		"nette/security": "^3.0",
+		"nette/utils": "^3.0",
+		"latte/latte": "^3.0",
+		"tracy/tracy": "^2.4"
+	},
+	"require-dev": {
+		"nette/tester": "^2.0"
+	},
+	"minimum-stability": "dev",
+	"config": {
+		"platform": {
+			"php": "7.1"
+		}
+	}
+}

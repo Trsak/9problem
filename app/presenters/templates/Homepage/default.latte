@@ -1,0 +1,73 @@
+{block content}
+        <div class="row">
+            <div class="col-lg-7">
+                {snippet elements}
+                <table class="table table-bordered">
+                {foreach $elements as $element}
+                    {foreach $element as $i}
+                        {if $iterator->isFirst()}
+                        <tr>
+                        {/if}
+                            <td>
+                                {if $i !=0}{$i}{/if}
+                            </td>
+                        {if $iterator->isLast()}
+                        </tr>
+                        {/if}
+                    {/foreach}
+                {/foreach}
+                </table>
+                {/snippet}
+            </div>
+            <div class="col-lg-2 text-center">
+                <div class="btn-group">
+                    <a class="btn btn-default left" onclick="left();"><i class="fa fa-chevron-left"></i></a>
+                    <a class="btn btn-default playSenteces" onclick="playSenteces()"><i class="fa fa-play"></i></a>
+                    <a class="btn btn-default right" onclick="right();"><i class="fa fa-chevron-right"></i></a>
+                </div>
+                {snippet sequence}
+                <div class="panel panel-default">
+                    <div class="panel-heading">Provedené kroky ({$count})</div>
+                    <div class="list-group">
+                        {var $i = 1, $id = 0, $lastR = 0, $lastC = 0, $actualR = 0, $actualC = 0}
+
+
+                        {foreach $sequences as $sequence}
+                            {var $r = 0}
+                            {foreach $sequence as $row}
+                            {var $c = 0}
+                                {foreach $row as $col}
+                                    {if $col == 0}{var $actualR = $r, $actualC = $c}{/if}
+                                {var $c += 1}
+                                {/foreach}
+                            {var $r += 1}
+                            {/foreach}
+
+                            {if $lastR < $actualR}
+                                {var $step = "Dolů"}
+                            {elseif $lastR > $actualR}
+                                {var $step = "Nahorů"}
+                            {elseif $lastC < $actualC}
+                                {var $step = "Doprava"}
+                            {elseif $lastC > $actualC}
+                                {var $step = "Doleva"}
+                            {/if}
+
+                            <a n:href="change! ($sequence|json)" class="list-group-item ajax {if $iterator->isFirst()}active{/if}" id="{$id}">{if $iterator->isFirst()}Původní stav{else}{$i}. {$step}{var $i += 1}{/if}</a>
+
+                            {var $lastR = $actualR, $lastC = $actualC, $id += 1}
+                        {/foreach}
+                    </div>
+                </div>
+                {/snippet}
+            </div>
+            <div class="col-lg-3">
+                <p class="bs-component">
+                    <a href="#" class="btn btn-lg btn-block btn-warning" data-toggle="modal" data-target="#settings"><i class="fa fa-cog"></i> Nastavení pole</a>
+                    {snippet play}
+                    <a type="button" class="btn btn-lg btn-block btn-primary play ajax" n:href="play! $elementsJson"><i class="fa fa-check"></i> Spustit</a>
+                    {/snippet}
+                </p>
+            </div>
+        </div>
+{/block}

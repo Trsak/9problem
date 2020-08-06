@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>9Problem</title>
+
+	<link rel="stylesheet" href="{$basePath}/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{$basePath}/css/fuelux.min.css">
+	<link rel="stylesheet" href="{$basePath}/css/font-awesome.min.css">
+	<link rel="stylesheet" href="{$basePath}/css/HoldOn.min.css">
+	<link rel="stylesheet" href="{$basePath}/css/toastr.min.css">
+	<link rel="stylesheet" href="{$basePath}/css/style.css">
+	{block head}{/block}
+</head>
+
+<body class="fuelux">
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a n:href="Homepage:" class="navbar-brand"><i class="fa fa-puzzle-piece"></i> 9Problem</a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="bs-docs-section">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-lg-12 infoTop">
+                    </div>
+                </div>
+            </div>
+	{include content}
+        </div>
+    </div>
+    {ifCurrent Homepage:}
+    <!-- Settings -->
+    <div class="modal fade" id="settings" tabindex="-1" role="dialog" aria-labelledby="settings">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-cog"></i> Nastavení</h4>
+                </div>
+                <div class="modal-body text-center">
+                    {snippet elementsSettings}
+                    {form changeForm, class=>"ajax"}
+                    <table class="table table-bordered elementsSettings">
+                    {var $id = 1}
+                    {foreach $elements as $element}
+                        {foreach $element as $i}
+                            {if $iterator->isFirst()}
+                            <tr>
+                            {/if}
+                                <td>
+                                    <input type="number" min="1" max="8" value="{if $i !=0}{$i}{/if}" n:name="elementS{$id}">
+                                </td>
+                            {if $iterator->isLast()}
+                            </tr>
+                            {/if}
+                        {var $id += 1}
+                        {/foreach}
+                    {/foreach}
+                    </table>
+                    <button type="submit" class="btn btn-primary ajax confirm"><i class="fa fa-check"></i> Potvrdit</button>
+                    {/form}
+                    {/snippet}
+                    <hr>
+                    <a type="button" class="btn btn-danger ajax" n:href="randomGenerate!"><i class="fa fa-random"></i> Náhodně vygenerovat</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Zavřít</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {/ifCurrent}
+
+    <div class="navbar navbar-fixed-bottom">
+        Vytvořil Petr Šopf, 2016
+    </div>
+
+	{block scripts}
+	<script src="{$basePath}/js/jquery.min.js"></script>
+    <script src="{$basePath}/js/nette.ajax.js"></script>
+    <script src="{$basePath}/js/bootstrap.min.js"></script>
+    <script src="{$basePath}/js/fuelux.min.js"></script>
+    <script src="{$basePath}/js/HoldOn.min.js"></script>
+    <script src="{$basePath}/js/toastr.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $.nette.init();
+        });
+    </script>
+    {snippet errors}
+    <script n:foreach="$flashes as $flash" type="text/javascript">
+        options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-top-center",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "2000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        {if $flash->message == "settingsValues"}
+            toastr.error("<ul><li>Musí být použita čísla 1-8</li><li>Musí být použito prázdné místo</li></ul>", "Chybně zadaná data", options)
+        {elseif $flash->type == "test"}
+            toastr.error({$flash->message}, "Chybně zadaná data", options)
+        {elseif $flash->type == "close"}
+            HoldOn.close();
+        {elseif $flash->type == "success"}
+            toastr.success({$flash->message}, 'Povedlo se!', options)
+        {/if}
+    </script>
+
+    <script type="text/javascript">
+        var nextIntervalId;
+        check();
+
+        function right () {
+            var id = parseInt($('.list-group .active').attr('id')) + 1;
+            $( "#" + id ).trigger( "click" );
+            $( "#" + id ).focus();
+        }
+
+        function left () {
+            var id = parseInt($('.list-group .active').attr('id')) - 1;
+            $( "#" + id ).trigger( "click" );
+            $( "#" + id ).focus();
+        }
+
+        function playSenteces () {
+            if ($(".playSenteces").attr('disabled') == "disabled") {
+                return false;
+            }
+
+            right();
+            nextIntervalId = setInterval(right, 1000);
+
+            $('.playSenteces .fa').removeClass("fa-play");
+            $('.playSenteces .fa').addClass("fa-pause");
+            $('.playSenteces').removeClass("hover");
+            $('.playSenteces').prop('onclick',null).off('click');
+            $(".playSenteces").click(pause);
+
+            check();
+        }
+
+        function pause () {
+            clearInterval(nextIntervalId);
+            $('.playSenteces .fa').removeClass("fa-pause");
+            $('.playSenteces .fa').addClass("fa-play");
+            $('.playSenteces').prop('onclick',null).off('click');
+            $(".playSenteces").click(playSenteces);
+
+            var id = parseInt($('.list-group .active').attr('id'));
+            $( "#" + id ).focus();
+        }
+
+        function check() {
+            var id = parseInt($('.list-group .active').attr('id'));
+            var count = $('.list-group-item').length - 1;
+
+            if (isNaN(id)) {
+                count = 0;
+                id = 0;
+
+                $(".left").attr('disabled','disabled');
+                $(".right").attr('disabled','disabled');
+                $(".playSenteces").attr('disabled','disabled');
+            }
+            else {
+                $(".left").removeAttr('disabled');
+                $(".right").removeAttr('disabled');
+                $(".playSenteces").removeAttr('disabled');
+            }
+
+            if (id.toString() == 0) {
+                $(".left").attr('disabled','disabled');
+            }
+            else if (id.toString() == count) {
+                $(".right").attr('disabled','disabled');
+                $(".playSenteces").attr('disabled','disabled');
+                pause();
+            }
+        }
+
+        $('.list-group a').click(function(){
+            $( ".list-group a" ).each(function() {
+                $( this ).removeClass( "active" );
+            });
+
+            $( this ).addClass( "active" );
+            check();
+        });
+
+        $('.play').click(function(){
+            var options = {
+                theme:"sk-cube-grid",
+                message:"Hledám řešení..."
+            };
+
+            HoldOn.open(options);
+        });
+    </script>
+    {/snippet}
+	{/block}
+</body>
+</html>

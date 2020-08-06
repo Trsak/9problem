@@ -1,0 +1,58 @@
+.btn-lg {
+    font-size: 20px;
+}
+
+.table td {
+    text-align: center;
+    font-size: 75px;
+}
+
+.panel {
+    margin-top: 20px;
+}
+
+.list-group {
+    max-height: 260px;
+    overflow-y: scroll;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.navbar-brand {
+    font-size: 25px;
+}
+
+.navbar-fixed-bottom {
+    text-align: center;
+    font-size: 25px;
+    background-color: #3e3f3a;
+    color: #FFFFFF;
+    padding-top: 10px;
+}
+
+.infoTop {
+    padding-top: 35px;
+}
+
+#holdon-message {
+    font-size: 35px;
+}
+
+#holdon-content-container {
+    margin-top: 500px;
+}
+
+.elementsSettings input {
+    width: 150px;
+    text-align: center;
+    border: 0;
+}
+
+hr {
+    width: 100%;
+    color: #474747;
+    height: 1px;
+    background-color: #474747;
+}
